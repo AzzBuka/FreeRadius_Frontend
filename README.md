@@ -41,5 +41,65 @@
 ## Настройка FreeRADIUS
 Чтобы FreeRADIUS читал данные из SQLite, убедитесь, что в `./config/radius/mods-available/sql` указан драйвер `rlm_sql_sqlite` и путь к базе `/var/lib/sqlite/radius.db`.
 
+## Настройка FreeRADIUS для работы с SQLite
+
+Чтобы сервер начал использовать созданную базу данных, выполните следующие шаги внутри папки проекта:
+
+### 1. Активация модуля SQL
+Создайте символическую ссылку, чтобы включить модуль:
+```bash
+ln -s ../mods-available/sql config/radius/mods-enabled/sql
+```
+
+### 2. Конфигурация модуля
+Отредактируйте файл `config/radius/mods-available/sql` и установите следующие параметры:
+
+```radius
+sql {
+    driver = "rlm_sql_sqlite"
+    dialect = "sqlite"
+    
+    sqlite {
+        # Путь внутри контейнера FreeRADIUS
+        filename = "/var/lib/sqlite/radius.db"
+    }
+    
+    # Включить чтение клиентов (коммутаторов) из базы
+    read_clients = yes
+}
+```
+
+### 3. Настройка логики авторизации
+В файле `config/radius/sites-enabled/default` найдите секции `authorize` и `accounting` и раскомментируйте (или добавьте) в них слово `sql`:
+
+```radius
+authorize {
+    # ...
+    sql
+    # ...
+}
+
+accounting {
+    # ...
+    sql
+    # ...
+}
+```
+
+Для записи логов входов в базу, также добавьте `sql` в секцию `post-auth`:
+```radius
+post-auth {
+    # ...
+    sql
+    # ...
+}
+```
+
+### 4. Применение настроек
+После внесения изменений перезапустите контейнер:
+```bash
+docker-compose restart freeradius
+```
+
 ## Лицензия
 Данный проект распространяется под лицензией MIT.

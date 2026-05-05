@@ -1,0 +1,4 @@
+data/radius.db
+www/admin.log*
+config/radius/
+.DS_Store

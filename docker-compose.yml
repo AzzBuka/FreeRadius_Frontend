@@ -1,0 +1,23 @@
+services:
+  freeradius:
+    image: freeradius/freeradius-server:latest
+    container_name: freeradius
+    restart: unless-stopped
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+    volumes:
+      - ./config/radius:/etc/raddb
+      - ./data:/var/lib/sqlite
+
+  web-admin:
+    image: php:8.2-apache
+    container_name: radius-web-admin
+    restart: unless-stopped
+    ports:
+      - "8333:80"
+    volumes:
+      - ./www:/var/www/html
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root

@@ -100,16 +100,59 @@ $users = $db->query("SELECT * FROM radcheck ORDER BY id DESC")->fetchAll(PDO::FE
     </div>
 
     <div class="card">
-        <h3>Список пользователей</h3>
-        <table>
-            <?php foreach ($users as $u): ?>
-            <tr>
-                <td><b><?=htmlspecialchars($u['username'])?></b></td>
-                <td><code><?=htmlspecialchars($u['value'])?></code></td>
-                <td><a href="?del=<?=$u['id']?>" class="danger" onclick="return confirm('Удалить?')">✕</a></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+    <h3>Список пользователей</h3>
+
+    <table>
+        <?php foreach ($users as $u): ?>
+        <tr>
+            <td>
+                <b><?=htmlspecialchars($u['username'])?></b>
+            </td>
+
+            <td>
+                <code class="password-field"
+                      data-password="<?=htmlspecialchars($u['value'])?>">
+                    <?=str_repeat('*', strlen($u['value']))?>
+                </code>
+
+                <button
+                    type="button"
+                    onclick="togglePassword(this)"
+                    style="margin-left:8px; padding:2px 8px; font-size:0.8em;"
+                >
+                    👁
+                </button>
+            </td>
+
+            <td>
+                <a href="?del=<?=$u['id']?>"
+                   class="danger"
+                   onclick="return confirm('Удалить?')">
+                    ✕
+                </a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+
+<script>
+function togglePassword(button) {
+
+    const passField = button.parentElement.querySelector('.password-field');
+
+    const realPassword = passField.dataset.password;
+
+    const hiddenPassword = '*'.repeat(realPassword.length);
+
+    if (passField.textContent === hiddenPassword) {
+        passField.textContent = realPassword;
+        button.textContent = '🙈';
+    } else {
+        passField.textContent = hiddenPassword;
+        button.textContent = '👁';
+    }
+}
+</script>
 </body>
 </html>

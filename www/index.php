@@ -99,12 +99,13 @@ $users = $db->query("SELECT * FROM radcheck ORDER BY id DESC")->fetchAll(PDO::FE
         </form>
     </div>
 
-    <div class="card">
+<div class="card">
     <h3>Список пользователей</h3>
 
     <table>
         <?php foreach ($users as $u): ?>
         <tr>
+
             <td>
                 <b><?=htmlspecialchars($u['username'])?></b>
             </td>
@@ -112,7 +113,7 @@ $users = $db->query("SELECT * FROM radcheck ORDER BY id DESC")->fetchAll(PDO::FE
             <td>
                 <code class="password-field"
                       data-password="<?=htmlspecialchars($u['value'])?>">
-                    <?=str_repeat('*', strlen($u['value']))?>
+                    ****************
                 </code>
 
                 <button
@@ -131,6 +132,7 @@ $users = $db->query("SELECT * FROM radcheck ORDER BY id DESC")->fetchAll(PDO::FE
                     ✕
                 </a>
             </td>
+
         </tr>
         <?php endforeach; ?>
     </table>
@@ -143,14 +145,18 @@ function togglePassword(button) {
 
     const realPassword = passField.dataset.password;
 
-    const hiddenPassword = '*'.repeat(realPassword.length);
+    const hiddenPassword = '****************';
 
-    if (passField.textContent === hiddenPassword) {
+    if (passField.textContent.trim() === hiddenPassword) {
+
         passField.textContent = realPassword;
         button.textContent = '🙈';
+
     } else {
+
         passField.textContent = hiddenPassword;
         button.textContent = '👁';
+
     }
 }
 </script>

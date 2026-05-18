@@ -15,7 +15,7 @@
 
 1. **Клонируйте репозиторий**:
    ```bash
-   git clone https://github.com
+   git clone https://github.com/AzzBuka/FreeRadius_Frontend
    cd FreeRadius_Frontend
    ```
 
